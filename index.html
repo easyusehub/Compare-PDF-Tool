@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Compare PDF Tool - EasyUseHub</title>
-<meta name="description" content="Compare two PDFs online with side-by-side preview, multi-page support, and synced scrolling. EasyUseHub PDF Tools.">
+<title>Compare PDF PRO - EasyUseHub</title>
+<meta name="description" content="Compare two PDFs online with automatic difference highlighting, side-by-side preview, and synced scrolling.">
 
 <style>
-body { font-family: Arial, sans-serif; margin:0; background:#f0f2f5; color:#333; }
-header { background: linear-gradient(135deg, #9333ea, #7c3aed); color:#fff; text-align:center; padding:20px; box-shadow:0 4px 12px rgba(0,0,0,0.2);}
+body { font-family: Arial,sans-serif; margin:0; background:#f0f2f5; color:#333; }
+header { background: linear-gradient(135deg,#9333ea,#7c3aed); color:#fff; text-align:center; padding:20px; box-shadow:0 4px 12px rgba(0,0,0,0.2);}
 header h1 { margin:0; font-size:2rem; }
 header p { margin:5px 0 0; font-size:1rem; }
 
@@ -28,9 +28,9 @@ header p { margin:5px 0 0; font-size:1rem; }
 
 .viewer { display:flex; gap:10px; flex-wrap:wrap; }
 
-.pdfBox { width:48%; height:500px; overflow:auto; border:1px solid #ccc; background:#fff; border-radius:10px; }
+.pdfBox { width:48%; height:500px; overflow:auto; border:1px solid #ccc; background:#fff; border-radius:10px; position:relative; }
 
-canvas { width:100%; margin-bottom:10px; }
+canvas { width:100%; display:block; }
 
 .controls { text-align:center; margin:10px 0; }
 
@@ -49,28 +49,16 @@ button {
 button:hover { transform: translateY(-2px) scale(1.03); box-shadow:0 8px 20px rgba(147,51,234,0.6); }
 button:active { transform: scale(0.96); }
 
-.secondary-btn {
-  background: linear-gradient(135deg, #111, #333);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
+.secondary-btn { background: linear-gradient(135deg,#111,#333); box-shadow:0 4px 12px rgba(0,0,0,0.3); }
 
-.ad-placeholder {
-  background:#ccc;
-  height:60px;
-  border-radius:10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:bold;
-  margin:10px 0;
-}
+.ad-placeholder { background:#ccc; height:60px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-weight:bold; margin:10px 0; }
 </style>
 </head>
 <body>
 
 <header>
-<h1>Compare PDF Tool</h1>
-<p>Compare two PDFs side-by-side with synced scrolling</p>
+<h1>Compare PDF PRO</h1>
+<p>Side-by-side PDF comparison with automatic highlights</p>
 </header>
 
 <div class="ad-placeholder">Top Ad Placeholder</div>
@@ -104,68 +92,94 @@ button:active { transform: scale(0.96); }
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 <script>
-let pdf1, pdf2, pageNum = 1;
+// Globals
+let pdf1, pdf2, pageNum=1;
 
-document.getElementById('file1').onchange = e => {
-  e.target.files[0].arrayBuffer().then(buf => {
+// Upload handling
+document.getElementById('file1').onchange = e => loadPDF(e.target.files[0], 1);
+document.getElementById('file2').onchange = e => loadPDF(e.target.files[0], 2);
+
+function loadPDF(file, num){
+  file.arrayBuffer().then(buf => {
     pdfjsLib.getDocument({data:buf}).promise.then(doc => {
-      pdf1 = doc;
-      render();
+      if(num===1) pdf1=doc;
+      else pdf2=doc;
+      renderPage();
     });
   });
-};
-
-document.getElementById('file2').onchange = e => {
-  e.target.files[0].arrayBuffer().then(buf => {
-    pdfjsLib.getDocument({data:buf}).promise.then(doc => {
-      pdf2 = doc;
-      render();
-    });
-  });
-};
-
-async function render(){
-  if(pdf1) renderPage(pdf1, 'box1');
-  if(pdf2) renderPage(pdf2, 'box2');
 }
 
-async function renderPage(pdf, containerId){
+// Extract text items with position
+async function extractText(pdf, pageNum){
+  const page = await pdf.getPage(pageNum);
+  const content = await page.getTextContent();
+  return content.items.map(item=>({
+    str: item.str,
+    x: item.transform[4],
+    y: item.transform[5],
+    width: item.width,
+    height: item.height
+  }));
+}
+
+// Compare text and return added/removed indexes
+function diffText(items1, items2){
+  const words1 = items1.map(t=>t.str);
+  const words2 = items2.map(t=>t.str);
+  const added=[], removed=[];
+  words2.forEach((w,i)=>{ if(!words1.includes(w)) added.push(i); });
+  words1.forEach((w,i)=>{ if(!words2.includes(w)) removed.push(i); });
+  return {added, removed};
+}
+
+// Draw highlights
+function drawHighlights(canvas, textItems, diffIndexes, color){
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = color;
+  diffIndexes.forEach(i=>{
+    const t = textItems[i];
+    ctx.fillRect(t.x, canvas.height - t.y, t.width, -t.height);
+  });
+}
+
+// Render page
+async function renderPage(){
+  if(!pdf1 && !pdf2) return;
+  const box1=document.getElementById('box1');
+  const box2=document.getElementById('box2');
+
+  if(pdf1) await renderPDFPage(pdf1, pageNum, box1);
+  if(pdf2) await renderPDFPage(pdf2, pageNum, box2);
+
+  if(pdf1 && pdf2){
+    const text1 = await extractText(pdf1,pageNum);
+    const text2 = await extractText(pdf2,pageNum);
+    const diff = diffText(text1,text2);
+    drawHighlights(box1.querySelector('canvas'), text1, diff.removed,'rgba(255,0,0,0.2)');
+    drawHighlights(box2.querySelector('canvas'), text2, diff.added,'rgba(0,255,0,0.2)');
+  }
+}
+
+// Render PDF page to canvas
+async function renderPDFPage(pdf,pageNum,container){
   const page = await pdf.getPage(pageNum);
   const viewport = page.getViewport({scale:1.5});
-
   const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-
   canvas.width = viewport.width;
   canvas.height = viewport.height;
-
-  await page.render({canvasContext:ctx, viewport}).promise;
-
-  const container = document.getElementById(containerId);
-  container.innerHTML = '';
+  const ctx = canvas.getContext('2d');
+  await page.render({canvasContext:ctx,viewport}).promise;
+  container.innerHTML='';
   container.appendChild(canvas);
 }
 
 // Page control
-function nextPage(){
-  pageNum++;
-  render();
-}
-
-function prevPage(){
-  if(pageNum > 1){
-    pageNum--;
-    render();
-  }
-}
+function nextPage(){ pageNum++; renderPage(); }
+function prevPage(){ if(pageNum>1){ pageNum--; renderPage(); } }
 
 // Sync scroll
-document.getElementById('box1').onscroll = function(){
-  document.getElementById('box2').scrollTop = this.scrollTop;
-};
-document.getElementById('box2').onscroll = function(){
-  document.getElementById('box1').scrollTop = this.scrollTop;
-};
+document.getElementById('box1').onscroll = function(){ document.getElementById('box2').scrollTop=this.scrollTop; }
+document.getElementById('box2').onscroll = function(){ document.getElementById('box1').scrollTop=this.scrollTop; }
 </script>
 
 </body>
