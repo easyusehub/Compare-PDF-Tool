@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compare PDF Tool - EasyUseHub</title>
+<meta name="description" content="Compare two PDFs online with side-by-side preview, multi-page support, and synced scrolling. EasyUseHub PDF Tools.">
+
+<style>
+body { font-family: Arial, sans-serif; margin:0; background:#f0f2f5; color:#333; }
+header { background: linear-gradient(135deg, #9333ea, #7c3aed); color:#fff; text-align:center; padding:20px; box-shadow:0 4px 12px rgba(0,0,0,0.2);}
+header h1 { margin:0; font-size:2rem; }
+header p { margin:5px 0 0; font-size:1rem; }
+
+.container { max-width:1100px; margin:auto; padding:20px; }
+
+.upload {
+  border:2px dashed #9333ea;
+  padding:20px;
+  text-align:center;
+  margin-bottom:10px;
+  border-radius:10px;
+  background:#fff;
+  cursor:pointer;
+  transition: all 0.3s ease;
+}
+.upload:hover { background:#f9f9f9; }
+
+.viewer { display:flex; gap:10px; flex-wrap:wrap; }
+
+.pdfBox { width:48%; height:500px; overflow:auto; border:1px solid #ccc; background:#fff; border-radius:10px; }
+
+canvas { width:100%; margin-bottom:10px; }
+
+.controls { text-align:center; margin:10px 0; }
+
+button {
+  padding:12px 22px;
+  border:none;
+  border-radius:12px;
+  background: linear-gradient(135deg,#9333ea,#7c3aed);
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+  transition: all 0.3s ease;
+  box-shadow:0 4px 12px rgba(147,51,234,0.4);
+  margin:5px;
+}
+button:hover { transform: translateY(-2px) scale(1.03); box-shadow:0 8px 20px rgba(147,51,234,0.6); }
+button:active { transform: scale(0.96); }
+
+.secondary-btn {
+  background: linear-gradient(135deg, #111, #333);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.ad-placeholder {
+  background:#ccc;
+  height:60px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+  margin:10px 0;
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Compare PDF Tool</h1>
+<p>Compare two PDFs side-by-side with synced scrolling</p>
+</header>
+
+<div class="ad-placeholder">Top Ad Placeholder</div>
+
+<div class="container">
+
+<div class="upload" onclick="file1.click()">Upload PDF 1</div>
+<input type="file" id="file1" accept="application/pdf" hidden>
+
+<div class="upload" onclick="file2.click()">Upload PDF 2</div>
+<input type="file" id="file2" accept="application/pdf" hidden>
+
+<div class="controls">
+<button onclick="prevPage()">⬅ Prev Page</button>
+<button onclick="nextPage()">Next Page ➡</button>
+</div>
+
+<div class="viewer">
+<div class="pdfBox" id="box1"></div>
+<div class="pdfBox" id="box2"></div>
+</div>
+
+<div class="controls">
+<button class="secondary-btn" onclick="window.location.href='https://easyusehub.blogspot.com/?m=1'">🏠 Home</button>
+<button class="secondary-btn" onclick="window.location.href='https://easyusehub.blogspot.com/p/free-pdf-tools-easyusehub.html?m=1'">📚 All Tools</button>
+</div>
+
+<div class="ad-placeholder">Middle Ad Placeholder</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script>
+let pdf1, pdf2, pageNum = 1;
+
+document.getElementById('file1').onchange = e => {
+  e.target.files[0].arrayBuffer().then(buf => {
+    pdfjsLib.getDocument({data:buf}).promise.then(doc => {
+      pdf1 = doc;
+      render();
+    });
+  });
+};
+
+document.getElementById('file2').onchange = e => {
+  e.target.files[0].arrayBuffer().then(buf => {
+    pdfjsLib.getDocument({data:buf}).promise.then(doc => {
+      pdf2 = doc;
+      render();
+    });
+  });
+};
+
+async function render(){
+  if(pdf1) renderPage(pdf1, 'box1');
+  if(pdf2) renderPage(pdf2, 'box2');
+}
+
+async function renderPage(pdf, containerId){
+  const page = await pdf.getPage(pageNum);
+  const viewport = page.getViewport({scale:1.5});
+
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = viewport.width;
+  canvas.height = viewport.height;
+
+  await page.render({canvasContext:ctx, viewport}).promise;
+
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+  container.appendChild(canvas);
+}
+
+// Page control
+function nextPage(){
+  pageNum++;
+  render();
+}
+
+function prevPage(){
+  if(pageNum > 1){
+    pageNum--;
+    render();
+  }
+}
+
+// Sync scroll
+document.getElementById('box1').onscroll = function(){
+  document.getElementById('box2').scrollTop = this.scrollTop;
+};
+document.getElementById('box2').onscroll = function(){
+  document.getElementById('box1').scrollTop = this.scrollTop;
+};
+</script>
+
+</body>
+</html>
