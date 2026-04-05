@@ -3,178 +3,172 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Pro PDF Compare – EasyUseHub</title>
+<title>Smart PDF Compare – EasyUseHub</title>
 <style>
-:root { --primary: #9333ea; --secondary: #2563eb; --bg: #f8fafc; }
-body, html { margin:0; padding:0; font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg); text-align:center; overflow-x: hidden; touch-action: manipulation; }
+:root { --primary: #9333ea; --bg: #f4f7f6; }
+body, html { margin:0; padding:0; font-family: Arial, sans-serif; background:var(--bg); text-align:center; overflow-x: hidden; touch-action: manipulation; }
 
-header { background: linear-gradient(135deg,#9333ea,#7c3aed); color:#fff; padding:25px 15px; box-shadow:0 4px 15px rgba(0,0,0,0.1); }
-header h1 { margin:0; font-size:1.6rem; letter-spacing: 1px; }
+header { background: linear-gradient(135deg,#9333ea,#7c3aed); color:#fff; padding:15px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+header h1 { margin:0; font-size:1.5rem; }
 
-.container { width: 100%; max-width: 1100px; margin:auto; padding:15px; box-sizing: border-box; }
+.container { width: 100%; max-width: 1100px; margin:auto; padding:10px; box-sizing: border-box; }
 
-/* --- Rakib235: Ad Bridges --- */
+/* --- 🔥 Rakib235: Compact Push Ad --- */
+#push-notification {
+    position: fixed; bottom: -120px; left: 50%; transform: translateX(-50%);
+    width: 85%; max-width: 300px; background: #fff; border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: flex; align-items: center; 
+    padding: 10px; z-index: 10000; transition: 0.5s; border-left: 5px solid var(--primary); text-align: left;
+}
+#push-notification.active { bottom: 15px; }
+#push-notification img { width: 35px; height: 35px; margin-right: 10px; border-radius: 5px; }
+.push-text b { font-size: 13px; color: #333; display: block; }
+.push-text p { font-size: 10px; color: #777; margin: 0; }
+
+/* --- 🔥 Rakib235: 3 Ad Bridge System --- */
 .custom-ad-bridge {
     background: linear-gradient(135deg, #1e3a8a, #2563eb);
-    color: white; padding: 15px; margin: 12px auto; border-radius: 12px; cursor: pointer;
-    width: 100%; max-width: 650px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: inline-block; box-sizing: border-box;
+    color: white; padding: 12px; margin: 10px auto; border-radius: 8px; cursor: pointer;
+    width: 100%; max-width: 600px; box-shadow: 0 3px 8px rgba(0,0,0,0.1); display: inline-block; box-sizing: border-box;
 }
-.ad-title { font-size: 15px; font-weight: bold; display: block; margin-bottom: 2px; }
-.ad-btn { background: #fbbf24; color: #000; padding: 5px 15px; border-radius: 5px; font-weight: bold; font-size: 10px; margin-top: 5px; border:none; text-transform: uppercase; }
+.ad-title { font-size: 14px; font-weight: bold; display: block; }
+.ad-btn { background: #fbbf24; color: #000; padding: 4px 12px; border-radius: 4px; font-weight: bold; font-size: 9px; margin-top: 5px; border:none; text-transform: uppercase; }
 
-/* --- Push Notification --- */
-#push-notification {
-    position: fixed; bottom: -160px; left: 50%; transform: translateX(-50%);
-    width: 90%; max-width: 360px; background: #fff; border-radius: 12px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: flex; align-items: center; 
-    padding: 15px; z-index: 10000; transition: 0.6s; border-top: 5px solid var(--primary); text-align: left;
-}
-#push-notification.active { bottom: 20px; }
-.close-push { position: absolute; top: 5px; right: 10px; font-size: 20px; cursor: pointer; color: #999; }
+/* Comparison UI */
+.upload-section { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
+.upload-btn { background: #fff; border: 2px dashed #9333ea; padding: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; color: var(--primary); font-size: 13px; }
+.viewer-wrap { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.pdf-box { width: 49%; min-width: 310px; height: 450px; overflow: auto; background: #fff; border: 1px solid #ddd; border-radius: 8px; position: relative; }
+@media (max-width: 700px) { .pdf-box { width: 100%; } .upload-section { grid-template-columns: 1fr; } }
 
-/* --- Comparison UI --- */
-.upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-.upload-card { background: #fff; border: 2px dashed #ddd; padding: 20px; border-radius: 12px; cursor: pointer; transition: 0.3s; }
-.upload-card:hover { border-color: var(--primary); background: #fdf4ff; }
-.upload-card b { display: block; color: var(--primary); margin-bottom: 5px; }
+canvas { width: 100%; display: block; }
+.highlight-layer { position: absolute; top: 0; left: 0; pointer-events: none; }
 
-.viewer-grid { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 15px; }
-.pdf-box { 
-    width: 49%; min-width: 320px; height: 550px; overflow: auto; background: #fff; 
-    border-radius: 12px; border: 1px solid #e2e8f0; position: relative; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
-@media (max-width: 768px) { .pdf-box { width: 100%; height: 450px; } .upload-grid { grid-template-columns: 1fr; } }
-
-canvas { width: 100%; height: auto; display: block; }
-
-.btn { padding: 12px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin: 5px; color: #fff; transition: 0.2s; }
-.btn-primary { background: var(--primary); box-shadow: 0 4px 12px rgba(147, 51, 234, 0.2); }
-.btn-dark { background: #1e293b; }
-
-#loading { display: none; color: var(--primary); font-weight: bold; margin: 10px; }
+.nav-btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; margin: 5px; font-weight: bold; color: #fff; background: var(--primary); }
+#status { font-size: 12px; color: #666; margin: 10px; font-weight: bold; }
 </style>
 </head>
 <body>
 
 <div id="push-notification" onclick="window.open('https://easyusehub.blogspot.com', '_blank')">
-    <span class="close-push" onclick="event.stopPropagation(); document.getElementById('push-notification').classList.remove('active');">&times;</span>
-    <img src="https://cdn-icons-png.flaticon.com/512/5968/5968313.png" alt="icon" style="width:40px; margin-right:12px;">
-    <div class="push-text"><b>🚀 Premium Tool Access!</b><p>Explore 46+ Pro Tools for Free at EasyUseHub.</p></div>
+    <img src="https://cdn-icons-png.flaticon.com/512/5968/5968313.png" alt="icon">
+    <div class="push-text"><b>🚀 46+ Pro Tools Free</b><p>Fast & Secure access at EasyUseHub.</p></div>
+    <span style="position:absolute; top:2px; right:8px; cursor:pointer; color:#ccc;" onclick="event.stopPropagation(); document.getElementById('push-notification').classList.remove('active');">&times;</span>
 </div>
 
-<header>
-    <h1>Pro PDF Compare</h1>
-</header>
+<header><h1>Smart PDF Compare</h1></header>
 
 <div class="container">
     <div class="custom-ad-bridge" onclick="window.open('https://easyusehub.blogspot.com', '_blank')">
         <span class="ad-title">🚀 Try 46+ Premium Free Web Tools!</span>
-        <p style="font-size:11px; margin:0;">PDF Tools, 16+ Calculators & More - 100% Free</p>
-        <button class="ad-btn">Open EasyUseHub</button>
+        <div class="ad-btn">Open EasyUseHub</div>
     </div>
 
-    <div class="upload-grid">
-        <div class="upload-card" onclick="document.getElementById('f1').click()">
-            <b>File 1 (Original)</b><span id="t1">Click to Upload</span>
-            <input type="file" id="f1" accept="application/pdf" hidden>
-        </div>
-        <div class="upload-card" onclick="document.getElementById('f2').click()">
-            <b>File 2 (Modified)</b><span id="t2">Click to Upload</span>
-            <input type="file" id="f2" accept="application/pdf" hidden>
-        </div>
+    <div class="upload-section">
+        <div class="upload-btn" onclick="document.getElementById('f1').click()">📁 File 1 (Original)<input type="file" id="f1" accept="application/pdf" hidden></div>
+        <div class="upload-btn" onclick="document.getElementById('f2').click()">📁 File 2 (Modified)<input type="file" id="f2" accept="application/pdf" hidden></div>
     </div>
 
-    <div id="loading">⚡ Analyzing PDFs... Please wait.</div>
+    <div id="status">Upload two PDFs to auto-detect differences.</div>
 
-    <div class="controls">
-        <button class="btn btn-primary" onclick="changePage(-1)">⬅ Prev</button>
-        <span id="pageInfo" style="font-weight:bold; margin:0 10px;">Page 1</span>
-        <button class="btn btn-primary" onclick="changePage(1)">Next ➡</button>
-    </div>
-
-    <div class="viewer-grid">
+    <div class="viewer-wrap">
         <div class="pdf-box" id="box1"></div>
         <div class="pdf-box" id="box2"></div>
     </div>
 
     <div class="custom-ad-bridge" style="background: linear-gradient(135deg, #7c3aed, #9333ea);" onclick="window.open('https://easyusehub.blogspot.com/p/ultimate-calculators-hub.html', '_blank')">
         <span class="ad-title">🔢 Smart Online Calculators</span>
-        <button class="ad-btn" style="background:#fff; color:#7c3aed;">Try Now</button>
+        <div class="ad-btn" style="background:#fff; color:#7c3aed;">Try Now</div>
     </div>
 
-    <div class="controls">
-        <button class="btn btn-dark" onclick="window.location.href='https://easyusehub.blogspot.com/'">🏠 Home</button>
-        <button class="btn btn-dark" onclick="window.location.href='https://easyusehub.blogspot.com/p/free-pdf-tools-online.html'">📂 All Tools</button>
+    <div style="margin: 15px 0;">
+        <button class="nav-btn" onclick="changePage(-1)">Prev</button>
+        <button class="nav-btn" onclick="changePage(1)">Next</button>
+    </div>
+
+    <div class="custom-ad-bridge" style="background: linear-gradient(135deg, #059669, #10b981);" onclick="window.open('https://easyusehub.blogspot.com/p/image-compressor.html', '_blank')">
+        <span class="ad-title">⚡ High-Speed Image Compressor</span>
+        <div class="ad-btn" style="background:#fff; color:#059669;">Compress Now</div>
+    </div>
+
+    <div style="margin-bottom: 50px;">
+        <button class="nav-btn" style="background:#333;" onclick="window.location.href='https://easyusehub.blogspot.com/'">🏠 Home</button>
     </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-
 <script>
-let pdf1 = null, pdf2 = null, curPage = 1;
+let pdf1=null, pdf2=null, pageNum=1;
 const pdfjs = window['pdfjs-dist/build/pdf'];
 pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
-document.getElementById('f1').onchange = e => handleFile(e.target.files[0], 1);
-document.getElementById('f2').onchange = e => handleFile(e.target.files[0], 2);
+document.getElementById('f1').onchange = e => loadFile(e.target.files[0], 1);
+document.getElementById('f2').onchange = e => loadFile(e.target.files[0], 2);
 
-async function handleFile(file, num) {
-    if (!file) return;
-    document.getElementById('t' + num).innerText = "✅ " + file.name;
+async function loadFile(file, num) {
+    if(!file) return;
     const data = await file.arrayBuffer();
     const doc = await pdfjs.getDocument({data}).promise;
-    if (num === 1) pdf1 = doc; else pdf2 = doc;
+    if(num===1) pdf1=doc; else pdf2=doc;
     render();
-    if (pdf1 && pdf2) {
-        document.getElementById('push-notification').classList.add('active');
-    }
+    if(pdf1 && pdf2) document.getElementById('push-notification').classList.add('active');
 }
 
 async function render() {
-    if (!pdf1 && !pdf2) return;
-    document.getElementById('loading').style.display = 'block';
+    if(!pdf1 && !pdf2) return;
+    document.getElementById('status').innerText = `⚡ Analyzing Differences (Page ${pageNum})...`;
     
-    document.getElementById('pageInfo').innerText = `Page ${curPage}`;
+    const b1 = document.getElementById('box1');
+    const b2 = document.getElementById('box2');
     
-    if (pdf1) await drawPage(pdf1, curPage, 'box1', '#fee2e2'); // Red tint for removal
-    if (pdf2) await drawPage(pdf2, curPage, 'box2', '#dcfce7'); // Green tint for addition
+    const t1 = pdf1 ? await getPageText(pdf1, pageNum) : [];
+    const t2 = pdf2 ? await getPageText(pdf2, pageNum) : [];
 
-    document.getElementById('loading').style.display = 'none';
+    if(pdf1) await drawPage(pdf1, pageNum, b1, t1, t2, 'rem');
+    if(pdf2) await drawPage(pdf2, pageNum, b2, t2, t1, 'add');
+    
+    document.getElementById('status').innerText = "✅ Done! Red = Removed, Green = Added.";
 }
 
-async function drawPage(pdf, num, boxId, tint) {
-    if (num > pdf.numPages) {
-        document.getElementById(boxId).innerHTML = "<p style='padding:20px;'>No page in this document.</p>";
-        return;
-    }
-    const page = await pdf.getPage(num);
+async function getPageText(pdf, n) {
+    if(n > pdf.numPages) return [];
+    const page = await pdf.getPage(n);
+    const content = await page.getTextContent();
+    return content.items.map(i => ({str: i.str, x: i.transform[4], y: i.transform[5], w: i.width, h: i.height}));
+}
+
+async function drawPage(pdf, n, box, myText, otherText, mode) {
+    if(n > pdf.numPages) { box.innerHTML="No Page"; return; }
+    const page = await pdf.getPage(n);
     const viewport = page.getViewport({scale: 1.5});
     const canvas = document.createElement('canvas');
+    canvas.width = viewport.width; canvas.height = viewport.height;
     const ctx = canvas.getContext('2d');
-    canvas.height = viewport.height;
-    canvas.width = viewport.width;
-    
     await page.render({canvasContext: ctx, viewport}).promise;
-    
-    // Smooth Sync Scroll
-    const box = document.getElementById(boxId);
+
+    // Detect Diff
+    ctx.globalAlpha = 0.4;
+    myText.forEach(item => {
+        const exists = otherText.some(other => other.str === item.str);
+        if(!exists) {
+            ctx.fillStyle = mode === 'rem' ? '#ff0000' : '#00ff00';
+            ctx.fillRect(item.x, canvas.height - item.y - item.h, item.w, item.h);
+        }
+    });
+
     box.innerHTML = '';
     box.appendChild(canvas);
 }
 
-function changePage(dir) {
-    const max = Math.max(pdf1 ? pdf1.numPages : 0, pdf2 ? pdf2.numPages : 0);
-    curPage += dir;
-    if (curPage < 1) curPage = 1;
-    if (curPage > max) curPage = max;
-    render();
+function changePage(d) {
+    pageNum += d; if(pageNum<1) pageNum=1; render();
 }
 
-// Sync Scrolling Logic
-const b1 = document.getElementById('box1');
-const b2 = document.getElementById('box2');
-b1.onscroll = () => { b2.scrollTop = b1.scrollTop; b2.scrollLeft = b1.scrollLeft; };
-b2.onscroll = () => { b1.scrollTop = b2.scrollTop; b1.scrollLeft = b2.scrollLeft; };
+// Sync Scroll
+const box1 = document.getElementById('box1');
+const box2 = document.getElementById('box2');
+box1.onscroll = () => box2.scrollTop = box1.scrollTop;
+box2.onscroll = () => box1.scrollTop = box2.scrollTop;
 </script>
 </body>
 </html>
