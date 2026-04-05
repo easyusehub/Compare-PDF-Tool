@@ -3,69 +3,71 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Ultimate PDF Compare – EasyUseHub</title>
+<title>Smart PDF Compare – EasyUseHub</title>
 <style>
-:root { --primary: #9333ea; --bg: #f8fafc; }
-body, html { margin:0; padding:0; font-family: Arial, sans-serif; background:var(--bg); overflow-x: hidden; touch-action: manipulation; }
+:root { --primary: #9333ea; --bg: #f5f7fa; }
+body, html{ margin:0; padding:0; font-family:Arial, sans-serif; background:var(--bg); text-align:center; position: relative; overflow-x: hidden;}
 
-header { background: linear-gradient(135deg,#9333ea,#7c3aed); color:#fff; padding:15px; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
-.container { width: 100%; max-width: 1100px; margin:auto; padding:10px; box-sizing: border-box; text-align:center; }
-
-/* --- Rakib235: 3 Ad Bridges --- */
+/* --- 🔥 Rakib235: Ultra Compact Ad Bridges --- */
 .custom-ad-bridge {
     background: linear-gradient(135deg, #1e3a8a, #2563eb);
-    color: white; padding: 12px; margin: 10px auto; border-radius: 8px; cursor: pointer;
-    width: 100%; max-width: 600px; box-shadow: 0 3px 8px rgba(0,0,0,0.1); display: inline-block; box-sizing: border-box;
+    color: white; padding: 12px; margin: 15px auto; border-radius: 10px; cursor: pointer;
+    width: 90%; max-width: 600px; box-shadow: 0 4px 10px rgba(255,0,0,0.2); transition: 0.2s; display: inline-block;
 }
-.ad-title { font-size: 14px; font-weight: bold; display: block; }
-.ad-btn { background: #fbbf24; color: #000; padding: 4px 12px; border-radius: 4px; font-weight: bold; font-size: 9px; margin-top: 5px; border:none; text-transform: uppercase; }
+.custom-ad-bridge:hover { transform: scale(1.01); }
+.ad-title { font-size: 15px; font-weight: bold; margin-bottom: 3px; display: block; }
+.custom-ad-bridge p { font-size: 12px; margin: 3px 0; opacity: 0.9; line-height: 1.4; }
+.ad-btn { background: #fbbf24; color: #000; padding: 5px 12px; border-radius: 4px; font-weight: bold; text-transform: uppercase; display: inline-block; font-size: 10px; margin-top: 4px; border:none; }
 
-/* --- Rakib235: Small Push Ad --- */
+/* --- 🔥 Rakib235: Compact Push Notification --- */
 #push-notification {
-    position: fixed; bottom: -120px; left: 50%; transform: translateX(-50%);
-    width: 85%; max-width: 300px; background: #fff; border-radius: 10px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: flex; align-items: center; 
-    padding: 10px; z-index: 10000; transition: 0.5s; border-left: 5px solid var(--primary); text-align: left;
+    position: fixed; bottom: -180px; right: 20px; width: 280px; background: #fff; border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15); display: flex; align-items: center; padding: 12px;
+    z-index: 10000; transition: bottom 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); cursor: pointer; border-left: 5px solid #2563eb; text-align: left;
 }
-#push-notification.active { bottom: 15px; }
+#push-notification.active { bottom: 20px; }
+#push-notification img { width: 40px; height: 40px; border-radius: 8px; margin-right: 12px; }
+.push-text b { font-size: 13px; color: #222; display: block; }
+.push-text p { font-size: 11px; color: #666; margin: 2px 0 0 0; }
 
-/* Comparison UI */
-.upload-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
-.up-btn { background: #fff; border: 2px dashed var(--primary); padding: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; color: var(--primary); }
-.viewer-wrap { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-.pdf-box { width: 49%; min-width: 310px; height: 500px; overflow: auto; background: #fff; border: 1px solid #ddd; border-radius: 8px; position: relative; }
+/* Comparison Styles */
+.viewer-wrap { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; padding: 10px; }
+.pdf-box { width: 48%; min-width: 310px; height: 500px; overflow: auto; background: #fff; border: 1px solid #ddd; border-radius: 10px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+@media (max-width: 768px) { .pdf-box { width: 100%; } }
 
-/* Diff Markers */
-.text-layer { position: absolute; top: 0; left: 0; pointer-events: none; }
-.diff-added { background-color: rgba(46, 204, 113, 0.3); border-bottom: 2px solid #27ae60; position: absolute; }
-.diff-removed { background-color: rgba(231, 76, 60, 0.3); text-decoration: line-through; border-bottom: 2px solid #c0392b; position: absolute; }
+canvas { width: 100%; display: block; }
+.diff-layer { position: absolute; top: 0; left: 0; pointer-events: none; }
+.marker-add { background: rgba(16, 185, 129, 0.3); border-bottom: 2px solid #10b981; position: absolute; }
+.marker-rem { background: rgba(239, 68, 68, 0.3); border-bottom: 2px solid #ef4444; position: absolute; }
 
-.nav-btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; margin: 5px; font-weight: bold; color: #fff; background: var(--primary); }
-#status { font-size: 13px; color: #444; margin: 10px; font-weight: bold; }
-@media (max-width: 700px) { .pdf-box { width: 100%; } .upload-wrap { grid-template-columns: 1fr; } }
+.nav-btn { padding:10px 22px; margin:5px; border-radius:8px; background:var(--primary); color:#fff; border:none; font-weight: bold; cursor:pointer; }
+#status { margin: 10px; font-size: 13px; color: #555; font-weight: bold; }
 </style>
 </head>
 <body>
 
 <div id="push-notification" onclick="window.open('https://easyusehub.blogspot.com', '_blank')">
-    <img src="https://cdn-icons-png.flaticon.com/512/5968/5968313.png" alt="icon" style="width:30px; margin-right:10px;">
-    <div class="push-text"><b>🚀 Premium Access</b><p>Fast & Secure at EasyUseHub.</p></div>
+    <img src="https://cdn-icons-png.flaticon.com/512/5968/5968313.png" alt="icon">
+    <div class="push-text"><b>🚀 46+ Premium Tools Ready!</b><p>PDF, Calculators & More - 100% Free</p></div>
 </div>
 
-<header><h1>Professional PDF Compare</h1></header>
+<h1 style="color:#333; margin-top:20px;">📊 Smart PDF Compare</h1>
 
 <div class="container">
     <div class="custom-ad-bridge" onclick="window.open('https://easyusehub.blogspot.com', '_blank')">
-        <span class="ad-title">🚀 Try 46+ Premium Free Tools</span>
-        <div class="ad-btn">Open Now</div>
+        <span class="ad-title">🚀 Try 46+ Premium Free Web Tools!</span>
+        <p>PDF Tools, 16+ Calculators - 100% Free at EasyUseHub</p>
+        <div class="ad-btn">Open EasyUseHub</div>
     </div>
 
-    <div class="upload-wrap">
-        <div class="up-btn" onclick="document.getElementById('f1').click()">📁 Original PDF<input type="file" id="f1" accept="application/pdf" hidden></div>
-        <div class="up-btn" onclick="document.getElementById('f2').click()">📁 Modified PDF<input type="file" id="f2" accept="application/pdf" hidden></div>
+    <div style="margin: 15px;">
+        <button class="nav-btn" onclick="document.getElementById('f1').click()">📁 Upload Original</button>
+        <button class="nav-btn" onclick="document.getElementById('f2').click()">📁 Upload Modified</button>
+        <input type="file" id="f1" accept="application/pdf" hidden>
+        <input type="file" id="f2" accept="application/pdf" hidden>
     </div>
 
-    <div id="status">Upload files to auto-detect pixel-perfect changes.</div>
+    <div id="status">Upload two files to detect differences.</div>
 
     <div class="viewer-wrap">
         <div class="pdf-box" id="box1"></div>
@@ -74,18 +76,19 @@ header { background: linear-gradient(135deg,#9333ea,#7c3aed); color:#fff; paddin
 
     <div class="custom-ad-bridge" style="background: linear-gradient(135deg, #7c3aed, #9333ea);" onclick="window.open('https://easyusehub.blogspot.com/p/ultimate-calculators-hub.html', '_blank')">
         <span class="ad-title">🔢 Smart Online Calculators</span>
-        <div class="ad-btn" style="background:#fff; color:#7c3aed;">Try Now</div>
+        <p>Loan EMI, Age & BMI Calculators - All in One Hub</p>
+        <div class="ad-btn" style="background: #fff; color: #7c3aed;">Try Now</div>
     </div>
 
-    <div style="margin: 15px 0;">
-        <button class="nav-btn" onclick="changePage(-1)">Prev</button>
-        <span id="pNum" style="font-weight:bold;">Page 1</span>
-        <button class="nav-btn" onclick="changePage(1)">Next</button>
+    <div style="margin-bottom: 20px;">
+        <button class="nav-btn" onclick="changePage(-1)">Prev Page</button>
+        <button class="nav-btn" onclick="changePage(1)">Next Page</button>
     </div>
 
     <div class="custom-ad-bridge" style="background: linear-gradient(135deg, #059669, #10b981);" onclick="window.open('https://easyusehub.blogspot.com/p/image-compressor.html', '_blank')">
         <span class="ad-title">⚡ High-Speed Image Compressor</span>
-        <div class="ad-btn" style="background:#fff; color:#059669;">Compress Now</div>
+        <p>Resize images without losing quality at EasyUseHub</p>
+        <div class="ad-btn" style="background: #fff; color: #059669;">Compress Now</div>
     </div>
 </div>
 
@@ -95,83 +98,62 @@ let pdf1=null, pdf2=null, pageNum=1;
 const pdfjs = window['pdfjs-dist/build/pdf'];
 pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
-document.getElementById('f1').onchange = e => loadFile(e.target.files[0], 1);
-document.getElementById('f2').onchange = e => loadFile(e.target.files[0], 2);
+document.getElementById('f1').onchange = e => loadPDF(e.target.files[0], 1);
+document.getElementById('f2').onchange = e => loadPDF(e.target.files[0], 2);
 
-async function loadFile(file, num) {
+async function loadPDF(file, num) {
     if(!file) return;
     const data = await file.arrayBuffer();
     const doc = await pdfjs.getDocument({data}).promise;
     if(num===1) pdf1=doc; else pdf2=doc;
     render();
-    if(pdf1 && pdf2) document.getElementById('push-notification').classList.add('active');
+    if(pdf1 && pdf2) setTimeout(() => document.getElementById('push-notification').classList.add('active'), 1500);
 }
 
-async function getPageData(pdf, n) {
+async function getItems(pdf, n) {
     if(!pdf || n > pdf.numPages) return [];
     const page = await pdf.getPage(n);
     const content = await page.getTextContent();
-    return content.items.map(i => ({
-        str: i.str, 
-        x: i.transform[4], 
-        y: i.transform[5], 
-        w: i.width, 
-        h: i.height
-    }));
+    return content.items.map(i => ({str: i.str, x: i.transform[4], y: i.transform[5], w: i.width, h: i.height}));
 }
 
 async function render() {
     if(!pdf1 && !pdf2) return;
-    document.getElementById('status').innerText = "🔍 Deep Scanning Differences...";
-    document.getElementById('pNum').innerText = `Page ${pageNum}`;
-
-    const items1 = await getPageData(pdf1, pageNum);
-    const items2 = await getPageData(pdf2, pageNum);
-
-    await drawWithDiff(pdf1, pageNum, 'box1', items1, items2, 'diff-removed');
-    await drawWithDiff(pdf2, pageNum, 'box2', items2, items1, 'diff-added');
-
+    document.getElementById('status').innerText = `Scanning Page ${pageNum}...`;
+    const itm1 = await getItems(pdf1, pageNum);
+    const itm2 = await getItems(pdf2, pageNum);
+    await draw(pdf1, pageNum, 'box1', itm1, itm2, 'marker-rem');
+    await draw(pdf2, pageNum, 'box2', itm2, itm1, 'marker-add');
     document.getElementById('status').innerText = "✅ Done! Red = Removed, Green = Added.";
 }
 
-async function drawWithDiff(pdf, n, boxId, myItems, otherItems, cssClass) {
+async function draw(pdf, n, boxId, myItm, otherItm, cls) {
     const box = document.getElementById(boxId);
-    if(!pdf || n > pdf.numPages) { box.innerHTML="No Data"; return; }
-
+    if(!pdf || n > pdf.numPages) { box.innerHTML="No Page"; return; }
     const page = await pdf.getPage(n);
     const viewport = page.getViewport({scale: 1.5});
     const canvas = document.createElement('canvas');
     canvas.width = viewport.width; canvas.height = viewport.height;
     await page.render({canvasContext: canvas.getContext('2d'), viewport}).promise;
-
-    const textLayer = document.createElement('div');
-    textLayer.className = 'text-layer';
     
-    myItems.forEach(item => {
-        const isDifferent = !otherItems.some(other => other.str.trim() === item.str.trim());
-        if(isDifferent && item.str.trim() !== "") {
-            const mark = document.createElement('div');
-            mark.className = cssClass;
-            mark.style.left = (item.x * 1.5) + 'px'; // Adjusted for scale 1.5
-            mark.style.top = (canvas.height - (item.y * 1.5) - (item.h * 1.5)) + 'px';
-            mark.style.width = (item.w * 1.5) + 'px';
-            mark.style.height = (item.h * 1.5) + 'px';
-            textLayer.appendChild(mark);
+    const layer = document.createElement('div');
+    layer.className = 'diff-layer';
+    myItm.forEach(i => {
+        if(i.str.trim() && !otherItm.some(o => o.str.trim() === i.str.trim())) {
+            const m = document.createElement('div');
+            m.className = cls;
+            m.style.left = (i.x * 1.5) + 'px';
+            m.style.top = (canvas.height - (i.y * 1.5) - (i.h * 1.5)) + 'px';
+            m.style.width = (i.w * 1.5) + 'px'; m.style.height = (i.h * 1.5) + 'px';
+            layer.appendChild(m);
         }
     });
-
-    box.innerHTML = '';
-    box.appendChild(canvas);
-    box.appendChild(textLayer);
+    box.innerHTML = ''; box.appendChild(canvas); box.appendChild(layer);
 }
 
-function changePage(d) {
-    pageNum += d; if(pageNum<1) pageNum=1; render();
-}
-
+function changePage(d) { pageNum += d; if(pageNum<1) pageNum=1; render(); }
 const b1 = document.getElementById('box1'), b2 = document.getElementById('box2');
-b1.onscroll = () => b2.scrollTop = b1.scrollTop;
-b2.onscroll = () => b1.scrollTop = b2.scrollTop;
+b1.onscroll = () => b2.scrollTop = b1.scrollTop; b2.onscroll = () => b1.scrollTop = b2.scrollTop;
 </script>
 </body>
 </html>
