@@ -3,75 +3,69 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Smart PDF Compare – EasyUseHub</title>
+<title>Ultimate PDF Compare – EasyUseHub</title>
 <style>
-:root { --primary: #9333ea; --bg: #f5f7fa; }
-body, html { margin:0; padding:0; font-family: 'Segoe UI', Arial, sans-serif; background:var(--bg); text-align:center; overflow-x: hidden; touch-action: manipulation; }
+:root { --primary: #9333ea; --bg: #f8fafc; }
+body, html { margin:0; padding:0; font-family: Arial, sans-serif; background:var(--bg); overflow-x: hidden; touch-action: manipulation; }
 
-header { background: linear-gradient(135deg,#9333ea,#7c3aed); color:#fff; padding:15px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
-header h1 { margin:0; font-size:1.4rem; }
+header { background: linear-gradient(135deg,#9333ea,#7c3aed); color:#fff; padding:15px; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+.container { width: 100%; max-width: 1100px; margin:auto; padding:10px; box-sizing: border-box; text-align:center; }
 
-.container { width: 100%; max-width: 1100px; margin:auto; padding:10px; box-sizing: border-box; }
-
-/* --- 🔥 Rakib235: Compact Push Ad (Fixed Size) --- */
-#push-notification {
-    position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%);
-    width: 85%; max-width: 280px; background: #fff; border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; align-items: center; 
-    padding: 8px 12px; z-index: 10000; transition: 0.5s; border-left: 4px solid var(--primary); text-align: left;
-}
-#push-notification.active { bottom: 15px; }
-#push-notification img { width: 30px; height: 30px; margin-right: 10px; border-radius: 4px; }
-.push-text b { font-size: 12px; color: #333; display: block; }
-.push-text p { font-size: 9px; color: #777; margin: 0; }
-
-/* --- 🔥 Rakib235: 3 Ad Bridge System with Full Description --- */
+/* --- Rakib235: 3 Ad Bridges --- */
 .custom-ad-bridge {
     background: linear-gradient(135deg, #1e3a8a, #2563eb);
-    color: white; padding: 14px; margin: 12px auto; border-radius: 10px; cursor: pointer;
-    width: 100%; max-width: 600px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); display: inline-block; box-sizing: border-box; text-decoration: none;
+    color: white; padding: 12px; margin: 10px auto; border-radius: 8px; cursor: pointer;
+    width: 100%; max-width: 600px; box-shadow: 0 3px 8px rgba(0,0,0,0.1); display: inline-block; box-sizing: border-box;
 }
-.ad-title { font-size: 15px; font-weight: bold; display: block; margin-bottom: 2px; }
-.ad-desc { font-size: 11px; opacity: 0.9; line-height: 1.4; display: block; }
-.ad-btn { background: #fbbf24; color: #000; padding: 4px 12px; border-radius: 4px; font-weight: bold; font-size: 10px; margin-top: 6px; display: inline-block; text-transform: uppercase; }
+.ad-title { font-size: 14px; font-weight: bold; display: block; }
+.ad-btn { background: #fbbf24; color: #000; padding: 4px 12px; border-radius: 4px; font-weight: bold; font-size: 9px; margin-top: 5px; border:none; text-transform: uppercase; }
 
-/* UI Improvements */
-.upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; }
-.upload-box { background: #fff; border: 2px dashed var(--primary); border-radius: 8px; padding: 12px; cursor: pointer; font-size: 12px; font-weight: bold; color: var(--primary); transition: 0.3s; }
-.upload-box:hover { background: #fdf4ff; }
+/* --- Rakib235: Small Push Ad --- */
+#push-notification {
+    position: fixed; bottom: -120px; left: 50%; transform: translateX(-50%);
+    width: 85%; max-width: 300px; background: #fff; border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: flex; align-items: center; 
+    padding: 10px; z-index: 10000; transition: 0.5s; border-left: 5px solid var(--primary); text-align: left;
+}
+#push-notification.active { bottom: 15px; }
 
-.viewer-wrap { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
-.pdf-box { width: 49%; min-width: 300px; height: 480px; overflow: auto; background: #fff; border: 1px solid #ddd; border-radius: 8px; position: relative; }
-@media (max-width: 700px) { .pdf-box { width: 100%; height: 400px; } .upload-grid { grid-template-columns: 1fr; } }
+/* Comparison UI */
+.upload-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
+.up-btn { background: #fff; border: 2px dashed var(--primary); padding: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; color: var(--primary); }
+.viewer-wrap { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.pdf-box { width: 49%; min-width: 310px; height: 500px; overflow: auto; background: #fff; border: 1px solid #ddd; border-radius: 8px; position: relative; }
 
-canvas { width: 100%; display: block; }
-.nav-btn { padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; margin: 5px; font-weight: bold; color: #fff; background: var(--primary); font-size: 13px; }
-#status { font-size: 11px; color: #555; background: #e9ecef; padding: 5px; border-radius: 4px; margin: 10px 0; font-weight: bold; }
+/* Diff Markers */
+.text-layer { position: absolute; top: 0; left: 0; pointer-events: none; }
+.diff-added { background-color: rgba(46, 204, 113, 0.3); border-bottom: 2px solid #27ae60; position: absolute; }
+.diff-removed { background-color: rgba(231, 76, 60, 0.3); text-decoration: line-through; border-bottom: 2px solid #c0392b; position: absolute; }
+
+.nav-btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; margin: 5px; font-weight: bold; color: #fff; background: var(--primary); }
+#status { font-size: 13px; color: #444; margin: 10px; font-weight: bold; }
+@media (max-width: 700px) { .pdf-box { width: 100%; } .upload-wrap { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
 
 <div id="push-notification" onclick="window.open('https://easyusehub.blogspot.com', '_blank')">
-    <img src="https://cdn-icons-png.flaticon.com/512/5968/5968313.png" alt="icon">
-    <div class="push-text"><b>🚀 46+ Premium Tools Ready!</b><p>Fast, Free & Secure at EasyUseHub.</p></div>
-    <span style="position:absolute; top:2px; right:8px; cursor:pointer; color:#ccc;" onclick="event.stopPropagation(); document.getElementById('push-notification').classList.remove('active');">&times;</span>
+    <img src="https://cdn-icons-png.flaticon.com/512/5968/5968313.png" alt="icon" style="width:30px; margin-right:10px;">
+    <div class="push-text"><b>🚀 Premium Access</b><p>Fast & Secure at EasyUseHub.</p></div>
 </div>
 
-<header><h1>Compare PDF - EasyUseHub</h1></header>
+<header><h1>Professional PDF Compare</h1></header>
 
 <div class="container">
     <div class="custom-ad-bridge" onclick="window.open('https://easyusehub.blogspot.com', '_blank')">
-        <span class="ad-title">🚀 Unlock 46+ Premium Web Tools</span>
-        <span class="ad-desc">Complete PDF Toolkit, 16+ Advanced Calculators, and Image Optimizers. 100% Free for Everyone!</span>
-        <div class="ad-btn">Open EasyUseHub</div>
+        <span class="ad-title">🚀 Try 46+ Premium Free Tools</span>
+        <div class="ad-btn">Open Now</div>
     </div>
 
-    <div class="upload-grid">
-        <div class="upload-box" onclick="document.getElementById('f1').click()">📁 File 1 (Original)<input type="file" id="f1" accept="application/pdf" hidden></div>
-        <div class="upload-box" onclick="document.getElementById('f2').click()">📁 File 2 (Modified)<input type="file" id="f2" accept="application/pdf" hidden></div>
+    <div class="upload-wrap">
+        <div class="up-btn" onclick="document.getElementById('f1').click()">📁 Original PDF<input type="file" id="f1" accept="application/pdf" hidden></div>
+        <div class="up-btn" onclick="document.getElementById('f2').click()">📁 Modified PDF<input type="file" id="f2" accept="application/pdf" hidden></div>
     </div>
 
-    <div id="status">Upload both files. Red = Removed | Green = Added</div>
+    <div id="status">Upload files to auto-detect pixel-perfect changes.</div>
 
     <div class="viewer-wrap">
         <div class="pdf-box" id="box1"></div>
@@ -79,24 +73,19 @@ canvas { width: 100%; display: block; }
     </div>
 
     <div class="custom-ad-bridge" style="background: linear-gradient(135deg, #7c3aed, #9333ea);" onclick="window.open('https://easyusehub.blogspot.com/p/ultimate-calculators-hub.html', '_blank')">
-        <span class="ad-title">🔢 Smart Online Calculators Hub</span>
-        <span class="ad-desc">Accurate Loan EMI, Age, BMI, and Financial Percentage Calculators. Simplified tools for daily life.</span>
+        <span class="ad-title">🔢 Smart Online Calculators</span>
         <div class="ad-btn" style="background:#fff; color:#7c3aed;">Try Now</div>
     </div>
 
-    <div style="margin: 10px 0;">
-        <button class="nav-btn" onclick="changePage(-1)">Prev Page</button>
-        <button class="nav-btn" onclick="changePage(1)">Next Page</button>
+    <div style="margin: 15px 0;">
+        <button class="nav-btn" onclick="changePage(-1)">Prev</button>
+        <span id="pNum" style="font-weight:bold;">Page 1</span>
+        <button class="nav-btn" onclick="changePage(1)">Next</button>
     </div>
 
     <div class="custom-ad-bridge" style="background: linear-gradient(135deg, #059669, #10b981);" onclick="window.open('https://easyusehub.blogspot.com/p/image-compressor.html', '_blank')">
         <span class="ad-title">⚡ High-Speed Image Compressor</span>
-        <span class="ad-desc">Compress and resize images without losing quality. Perfect for SEO and fast website loading.</span>
         <div class="ad-btn" style="background:#fff; color:#059669;">Compress Now</div>
-    </div>
-
-    <div style="margin-bottom: 60px;">
-        <button class="nav-btn" style="background:#333;" onclick="window.location.href='https://easyusehub.blogspot.com/'">🏠 Home</button>
     </div>
 </div>
 
@@ -119,64 +108,67 @@ async function loadFile(file, num) {
 }
 
 async function getPageData(pdf, n) {
-    if(!pdf || n > pdf.numPages) return { viewport: null, items: [] };
+    if(!pdf || n > pdf.numPages) return [];
     const page = await pdf.getPage(n);
-    const viewport = page.getViewport({scale: 1.5});
     const content = await page.getTextContent();
-    const items = content.items.map(i => ({
-        str: i.str.trim(),
-        x: i.transform[4],
-        y: i.transform[5],
-        w: i.width,
+    return content.items.map(i => ({
+        str: i.str, 
+        x: i.transform[4], 
+        y: i.transform[5], 
+        w: i.width, 
         h: i.height
-    })).filter(i => i.str.length > 0);
-    return { page, viewport, items };
+    }));
 }
 
 async function render() {
     if(!pdf1 && !pdf2) return;
-    document.getElementById('status').innerText = `Analyzing Page ${pageNum}...`;
+    document.getElementById('status').innerText = "🔍 Deep Scanning Differences...";
+    document.getElementById('pNum').innerText = `Page ${pageNum}`;
 
-    const d1 = await getPageData(pdf1, pageNum);
-    const d2 = await getPageData(pdf2, pageNum);
+    const items1 = await getPageData(pdf1, pageNum);
+    const items2 = await getPageData(pdf2, pageNum);
 
-    await draw(d1, d2, 'box1', 'rem');
-    await draw(d2, d1, 'box2', 'add');
-    
-    document.getElementById('status').innerText = `Page ${pageNum} Comparison Done.`;
+    await drawWithDiff(pdf1, pageNum, 'box1', items1, items2, 'diff-removed');
+    await drawWithDiff(pdf2, pageNum, 'box2', items2, items1, 'diff-added');
+
+    document.getElementById('status').innerText = "✅ Done! Red = Removed, Green = Added.";
 }
 
-async function draw(target, source, boxId, mode) {
+async function drawWithDiff(pdf, n, boxId, myItems, otherItems, cssClass) {
     const box = document.getElementById(boxId);
-    if(!target.page) { box.innerHTML = "No Page Data"; return; }
+    if(!pdf || n > pdf.numPages) { box.innerHTML="No Data"; return; }
 
+    const page = await pdf.getPage(n);
+    const viewport = page.getViewport({scale: 1.5});
     const canvas = document.createElement('canvas');
-    canvas.width = target.viewport.width;
-    canvas.height = target.viewport.height;
-    const ctx = canvas.getContext('2d');
-    await target.page.render({canvasContext: ctx, viewport: target.viewport}).promise;
+    canvas.width = viewport.width; canvas.height = viewport.height;
+    await page.render({canvasContext: canvas.getContext('2d'), viewport}).promise;
 
-    // Smart Difference Detection Logic
-    ctx.globalAlpha = 0.35;
-    target.items.forEach(item => {
-        // টেক্সট এবং পজিশন ম্যাচ করার চেষ্টা
-        const match = source.items.find(s => s.str === item.str && Math.abs(s.x - item.x) < 10);
-        if(!match) {
-            ctx.fillStyle = (mode === 'rem') ? '#FF0000' : '#00FF00';
-            // হাইলাইটটা টেক্সটের সাথে অ্যালাইন করা
-            ctx.fillRect(item.x, canvas.height - item.y - item.h, item.w || 20, item.h || 10);
+    const textLayer = document.createElement('div');
+    textLayer.className = 'text-layer';
+    
+    myItems.forEach(item => {
+        const isDifferent = !otherItems.some(other => other.str.trim() === item.str.trim());
+        if(isDifferent && item.str.trim() !== "") {
+            const mark = document.createElement('div');
+            mark.className = cssClass;
+            mark.style.left = (item.x * 1.5) + 'px'; // Adjusted for scale 1.5
+            mark.style.top = (canvas.height - (item.y * 1.5) - (item.h * 1.5)) + 'px';
+            mark.style.width = (item.w * 1.5) + 'px';
+            mark.style.height = (item.h * 1.5) + 'px';
+            textLayer.appendChild(mark);
         }
     });
 
     box.innerHTML = '';
     box.appendChild(canvas);
+    box.appendChild(textLayer);
 }
 
 function changePage(d) {
-    pageNum += d; if(pageNum < 1) pageNum = 1; render();
+    pageNum += d; if(pageNum<1) pageNum=1; render();
 }
 
-// Sync Scroll Fix
 const b1 = document.getElementById('box1'), b2 = document.getElementById('box2');
 b1.onscroll = () => b2.scrollTop = b1.scrollTop;
 b2.onscroll = () => b1.scrollTop = b2.scrollTop;
