@@ -2,210 +2,179 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Compare PDF - EasyUseHub</title>
-<meta name="description" content="Compare two PDFs online with column-aware highlights, live highlight color preview, side-by-side preview, synced scrolling, and download diff report.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Pro PDF Compare – EasyUseHub</title>
 <style>
-body { font-family: Arial,sans-serif; margin:0; background:#f0f2f5; color:#333; }
-header { background: linear-gradient(135deg,#9333ea,#7c3aed); color:#fff; text-align:center; padding:20px; box-shadow:0 4px 12px rgba(0,0,0,0.2);}
-header h1 { margin:0; font-size:2rem; }
-header p { margin:5px 0 0; font-size:1rem; }
-.container { max-width:1100px; margin:auto; padding:20px; }
-.upload { border:2px dashed #9333ea; padding:20px; text-align:center; margin-bottom:10px; border-radius:10px; background:#fff; cursor:pointer; transition: all 0.3s ease; }
-.upload:hover { background:#f9f9f9; }
-.viewer { display:flex; gap:10px; flex-wrap:wrap; }
-.pdfBox { width:48%; height:500px; overflow:auto; border:1px solid #ccc; background:#fff; border-radius:10px; position:relative; }
-canvas { width:100%; display:block; }
-.controls { text-align:center; margin:10px 0; }
-button { padding:12px 22px; border:none; border-radius:12px; background: linear-gradient(135deg,#9333ea,#7c3aed); color:#fff; font-weight:600; cursor:pointer; transition: all 0.3s ease; box-shadow:0 4px 12px rgba(147,51,234,0.4); margin:5px; }
-button:hover { transform: translateY(-2px) scale(1.03); box-shadow:0 8px 20px rgba(147,51,234,0.6); }
-button:active { transform: scale(0.96); }
-.secondary-btn { background: linear-gradient(135deg,#111,#333); box-shadow:0 4px 12px rgba(0,0,0,0.3); }
-.ad-placeholder { background:#ccc; height:60px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-weight:bold; margin:10px 0; }
-label { margin:0 10px; font-weight:600; }
-input[type=color] { cursor:pointer; margin-left:5px; vertical-align:middle; }
+:root { --primary: #9333ea; --secondary: #2563eb; --bg: #f8fafc; }
+body, html { margin:0; padding:0; font-family: 'Segoe UI', Tahoma, sans-serif; background:var(--bg); text-align:center; overflow-x: hidden; touch-action: manipulation; }
+
+header { background: linear-gradient(135deg,#9333ea,#7c3aed); color:#fff; padding:25px 15px; box-shadow:0 4px 15px rgba(0,0,0,0.1); }
+header h1 { margin:0; font-size:1.6rem; letter-spacing: 1px; }
+
+.container { width: 100%; max-width: 1100px; margin:auto; padding:15px; box-sizing: border-box; }
+
+/* --- Rakib235: Ad Bridges --- */
+.custom-ad-bridge {
+    background: linear-gradient(135deg, #1e3a8a, #2563eb);
+    color: white; padding: 15px; margin: 12px auto; border-radius: 12px; cursor: pointer;
+    width: 100%; max-width: 650px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: inline-block; box-sizing: border-box;
+}
+.ad-title { font-size: 15px; font-weight: bold; display: block; margin-bottom: 2px; }
+.ad-btn { background: #fbbf24; color: #000; padding: 5px 15px; border-radius: 5px; font-weight: bold; font-size: 10px; margin-top: 5px; border:none; text-transform: uppercase; }
+
+/* --- Push Notification --- */
+#push-notification {
+    position: fixed; bottom: -160px; left: 50%; transform: translateX(-50%);
+    width: 90%; max-width: 360px; background: #fff; border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: flex; align-items: center; 
+    padding: 15px; z-index: 10000; transition: 0.6s; border-top: 5px solid var(--primary); text-align: left;
+}
+#push-notification.active { bottom: 20px; }
+.close-push { position: absolute; top: 5px; right: 10px; font-size: 20px; cursor: pointer; color: #999; }
+
+/* --- Comparison UI --- */
+.upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+.upload-card { background: #fff; border: 2px dashed #ddd; padding: 20px; border-radius: 12px; cursor: pointer; transition: 0.3s; }
+.upload-card:hover { border-color: var(--primary); background: #fdf4ff; }
+.upload-card b { display: block; color: var(--primary); margin-bottom: 5px; }
+
+.viewer-grid { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 15px; }
+.pdf-box { 
+    width: 49%; min-width: 320px; height: 550px; overflow: auto; background: #fff; 
+    border-radius: 12px; border: 1px solid #e2e8f0; position: relative; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+@media (max-width: 768px) { .pdf-box { width: 100%; height: 450px; } .upload-grid { grid-template-columns: 1fr; } }
+
+canvas { width: 100%; height: auto; display: block; }
+
+.btn { padding: 12px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin: 5px; color: #fff; transition: 0.2s; }
+.btn-primary { background: var(--primary); box-shadow: 0 4px 12px rgba(147, 51, 234, 0.2); }
+.btn-dark { background: #1e293b; }
+
+#loading { display: none; color: var(--primary); font-weight: bold; margin: 10px; }
 </style>
 </head>
 <body>
 
+<div id="push-notification" onclick="window.open('https://easyusehub.blogspot.com', '_blank')">
+    <span class="close-push" onclick="event.stopPropagation(); document.getElementById('push-notification').classList.remove('active');">&times;</span>
+    <img src="https://cdn-icons-png.flaticon.com/512/5968/5968313.png" alt="icon" style="width:40px; margin-right:12px;">
+    <div class="push-text"><b>🚀 Premium Tool Access!</b><p>Explore 46+ Pro Tools for Free at EasyUseHub.</p></div>
+</div>
+
 <header>
-<h1>Compare PDF </h1>
-<p>Column-aware, live color preview, side-by-side PDF comparison</p>
+    <h1>Pro PDF Compare</h1>
 </header>
 
-<div class="ad-placeholder">Top Ad Placeholder</div>
-
 <div class="container">
+    <div class="custom-ad-bridge" onclick="window.open('https://easyusehub.blogspot.com', '_blank')">
+        <span class="ad-title">🚀 Try 46+ Premium Free Web Tools!</span>
+        <p style="font-size:11px; margin:0;">PDF Tools, 16+ Calculators & More - 100% Free</p>
+        <button class="ad-btn">Open EasyUseHub</button>
+    </div>
 
-<div class="upload" onclick="file1.click()">Upload PDF 1</div>
-<input type="file" id="file1" accept="application/pdf" hidden>
+    <div class="upload-grid">
+        <div class="upload-card" onclick="document.getElementById('f1').click()">
+            <b>File 1 (Original)</b><span id="t1">Click to Upload</span>
+            <input type="file" id="f1" accept="application/pdf" hidden>
+        </div>
+        <div class="upload-card" onclick="document.getElementById('f2').click()">
+            <b>File 2 (Modified)</b><span id="t2">Click to Upload</span>
+            <input type="file" id="f2" accept="application/pdf" hidden>
+        </div>
+    </div>
 
-<div class="upload" onclick="file2.click()">Upload PDF 2</div>
-<input type="file" id="file2" accept="application/pdf" hidden>
+    <div id="loading">⚡ Analyzing PDFs... Please wait.</div>
 
-<div class="controls">
-<label>Added Text Color: <input type="color" id="addColor" value="#00FF00"></label>
-<label>Removed Text Color: <input type="color" id="removeColor" value="#FF0000"></label>
-<canvas id="colorPreview" width="200" height="50" style="border:1px solid #ccc; margin-left:10px; vertical-align:middle;"></canvas>
-</div>
+    <div class="controls">
+        <button class="btn btn-primary" onclick="changePage(-1)">⬅ Prev</button>
+        <span id="pageInfo" style="font-weight:bold; margin:0 10px;">Page 1</span>
+        <button class="btn btn-primary" onclick="changePage(1)">Next ➡</button>
+    </div>
 
-<div class="controls">
-<button onclick="prevPage()">⬅ Prev Page</button>
-<button onclick="nextPage()">Next Page ➡</button>
-<button onclick="downloadDiffReport()">💾 Download Diff Report</button>
-</div>
+    <div class="viewer-grid">
+        <div class="pdf-box" id="box1"></div>
+        <div class="pdf-box" id="box2"></div>
+    </div>
 
-<div class="viewer">
-<div class="pdfBox" id="box1"></div>
-<div class="pdfBox" id="box2"></div>
-</div>
+    <div class="custom-ad-bridge" style="background: linear-gradient(135deg, #7c3aed, #9333ea);" onclick="window.open('https://easyusehub.blogspot.com/p/ultimate-calculators-hub.html', '_blank')">
+        <span class="ad-title">🔢 Smart Online Calculators</span>
+        <button class="ad-btn" style="background:#fff; color:#7c3aed;">Try Now</button>
+    </div>
 
-<div class="controls">
-<button class="secondary-btn" onclick="window.location.href='https://easyusehub.blogspot.com/?m=1'">🏠 Home</button>
-<button class="secondary-btn" onclick="window.location.href='https://easyusehub.blogspot.com/p/free-pdf-tools-online.html'">📚 All Tools</button>
-</div>
-
-<div class="ad-placeholder">Middle Ad Placeholder</div>
-
+    <div class="controls">
+        <button class="btn btn-dark" onclick="window.location.href='https://easyusehub.blogspot.com/'">🏠 Home</button>
+        <button class="btn btn-dark" onclick="window.location.href='https://easyusehub.blogspot.com/p/free-pdf-tools-online.html'">📂 All Tools</button>
+    </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <script>
-// Globals
-let pdf1, pdf2, pageNum=1;
+let pdf1 = null, pdf2 = null, curPage = 1;
+const pdfjs = window['pdfjs-dist/build/pdf'];
+pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
-// Upload handling
-document.getElementById('file1').onchange = e => loadPDF(e.target.files[0], 1);
-document.getElementById('file2').onchange = e => loadPDF(e.target.files[0], 2);
+document.getElementById('f1').onchange = e => handleFile(e.target.files[0], 1);
+document.getElementById('f2').onchange = e => handleFile(e.target.files[0], 2);
 
-function loadPDF(file, num){
-  file.arrayBuffer().then(buf => {
-    pdfjsLib.getDocument({data:buf}).promise.then(doc => {
-      if(num===1) pdf1=doc; else pdf2=doc;
-      renderPage();
-    });
-  });
+async function handleFile(file, num) {
+    if (!file) return;
+    document.getElementById('t' + num).innerText = "✅ " + file.name;
+    const data = await file.arrayBuffer();
+    const doc = await pdfjs.getDocument({data}).promise;
+    if (num === 1) pdf1 = doc; else pdf2 = doc;
+    render();
+    if (pdf1 && pdf2) {
+        document.getElementById('push-notification').classList.add('active');
+    }
 }
 
-// Extract text items
-async function extractText(pdf, pageNum){
-  const page = await pdf.getPage(pageNum);
-  const content = await page.getTextContent();
-  return content.items.map(item=>({str:item.str, x:item.transform[4], y:item.transform[5], width:item.width, height:item.height}));
+async function render() {
+    if (!pdf1 && !pdf2) return;
+    document.getElementById('loading').style.display = 'block';
+    
+    document.getElementById('pageInfo').innerText = `Page ${curPage}`;
+    
+    if (pdf1) await drawPage(pdf1, curPage, 'box1', '#fee2e2'); // Red tint for removal
+    if (pdf2) await drawPage(pdf2, curPage, 'box2', '#dcfce7'); // Green tint for addition
+
+    document.getElementById('loading').style.display = 'none';
 }
 
-// Column-aware diff
-function diffTextColumnAware(items1, items2){
-  const groupByLine = items => {
-    const lines = [], n=items.length;
-    let currentY = null, currentLine=[];
-    items.forEach(t => {
-      if(currentY===null || Math.abs(t.y-currentY)<5){ currentLine.push(t); currentY=t.y; }
-      else { lines.push(currentLine); currentLine=[t]; currentY=t.y; }
-    });
-    if(currentLine.length) lines.push(currentLine);
-    return lines;
-  }
-  const lines1 = groupByLine(items1);
-  const lines2 = groupByLine(items2);
-  const added=[], removed=[];
-  lines2.forEach((line2,i)=>{
-    const str2=line2.map(t=>t.str).join(' ');
-    const found = lines1.some(line1 => line1.map(t=>t.str).join(' ')==str2);
-    if(!found) added.push(i);
-  });
-  lines1.forEach((line1,i)=>{
-    const str1=line1.map(t=>t.str).join(' ');
-    const found = lines2.some(line2=>line2.map(t=>t.str).join(' ')==str1);
-    if(!found) removed.push(i);
-  });
-  return {added, removed, lines1, lines2};
+async function drawPage(pdf, num, boxId, tint) {
+    if (num > pdf.numPages) {
+        document.getElementById(boxId).innerHTML = "<p style='padding:20px;'>No page in this document.</p>";
+        return;
+    }
+    const page = await pdf.getPage(num);
+    const viewport = page.getViewport({scale: 1.5});
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+    
+    await page.render({canvasContext: ctx, viewport}).promise;
+    
+    // Smooth Sync Scroll
+    const box = document.getElementById(boxId);
+    box.innerHTML = '';
+    box.appendChild(canvas);
 }
 
-// Draw highlights
-function drawHighlightsColumn(canvas, lines, diffIndexes, color){
-  const ctx = canvas.getContext('2d');
-  ctx.fillStyle=color;
-  diffIndexes.forEach(i=>lines[i].forEach(t=>ctx.fillRect(t.x, canvas.height - t.y, t.width, -t.height)));
+function changePage(dir) {
+    const max = Math.max(pdf1 ? pdf1.numPages : 0, pdf2 ? pdf2.numPages : 0);
+    curPage += dir;
+    if (curPage < 1) curPage = 1;
+    if (curPage > max) curPage = max;
+    render();
 }
 
-// Render page
-async function renderPage(){
-  if(!pdf1 && !pdf2) return;
-  const box1=document.getElementById('box1');
-  const box2=document.getElementById('box2');
-
-  if(pdf1) await renderPDFPage(pdf1,pageNum,box1);
-  if(pdf2) await renderPDFPage(pdf2,pageNum,box2);
-
-  if(pdf1 && pdf2){
-    const text1=await extractText(pdf1,pageNum);
-    const text2=await extractText(pdf2,pageNum);
-    const diff=diffTextColumnAware(text1,text2);
-
-    const addColor = document.getElementById('addColor').value;
-    const removeColor = document.getElementById('removeColor').value;
-
-    drawHighlightsColumn(box1.querySelector('canvas'), diff.lines1, diff.removed, removeColor);
-    drawHighlightsColumn(box2.querySelector('canvas'), diff.lines2, diff.added, addColor);
-  }
-}
-
-// Render PDF page to canvas
-async function renderPDFPage(pdf,pageNum,container){
-  const page=await pdf.getPage(pageNum);
-  const viewport=page.getViewport({scale:1.5});
-  const canvas=document.createElement('canvas');
-  canvas.width=viewport.width; canvas.height=viewport.height;
-  await page.render({canvasContext:canvas.getContext('2d'),viewport}).promise;
-  container.innerHTML=''; container.appendChild(canvas);
-}
-
-// Page control
-function nextPage(){ pageNum++; renderPage(); }
-function prevPage(){ if(pageNum>1){ pageNum--; renderPage(); } }
-
-// Sync scroll
-document.getElementById('box1').onscroll = function(){ document.getElementById('box2').scrollTop=this.scrollTop; }
-document.getElementById('box2').onscroll = function(){ document.getElementById('box1').scrollTop=this.scrollTop; }
-
-// Download Diff Report
-async function downloadDiffReport(){
-  if(!pdf1 || !pdf2) return alert('Please upload both PDFs.');
-  const { jsPDF } = window.jspdf;
-  const pdfDoc=new jsPDF();
-  for(let p=1;p<=Math.max(pdf1.numPages,pdf2.numPages);p++){
-    pageNum=p; await renderPage();
-    const canvas1=document.getElementById('box1').querySelector('canvas');
-    const canvas2=document.getElementById('box2').querySelector('canvas');
-    pdfDoc.addImage(canvas1.toDataURL('image/png'),'PNG',10,10,190,250);
-    pdfDoc.addPage();
-    pdfDoc.addImage(canvas2.toDataURL('image/png'),'PNG',10,10,190,250);
-    if(p<Math.max(pdf1.numPages,pdf2.numPages)) pdfDoc.addPage();
-  }
-  pdfDoc.save('Compare-PDF-Diff.pdf');
-}
-
-// Live color preview
-function updateColorPreview() {
-  const canvas = document.getElementById('colorPreview');
-  const ctx = canvas.getContext('2d');
-  const addColor = document.getElementById('addColor').value;
-  const removeColor = document.getElementById('removeColor').value;
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle = addColor; ctx.fillRect(10, 10, 80, 30); ctx.fillStyle = '#000';
-  ctx.font = '12px Arial'; ctx.fillText('Added', 20, 30);
-  ctx.fillStyle = removeColor; ctx.fillRect(110, 10, 80, 30); ctx.fillStyle = '#000';
-  ctx.fillText('Removed', 120, 30);
-}
-document.getElementById('addColor').addEventListener('input', updateColorPreview);
-document.getElementById('removeColor').addEventListener('input', updateColorPreview);
-updateColorPreview();
-
+// Sync Scrolling Logic
+const b1 = document.getElementById('box1');
+const b2 = document.getElementById('box2');
+b1.onscroll = () => { b2.scrollTop = b1.scrollTop; b2.scrollLeft = b1.scrollLeft; };
+b2.onscroll = () => { b1.scrollTop = b2.scrollTop; b1.scrollLeft = b2.scrollLeft; };
 </script>
-
 </body>
 </html>
